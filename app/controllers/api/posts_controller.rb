@@ -5,13 +5,17 @@ module Api
       render json: { ok: true, result: @posts }, status: :ok
     end
 
-    def new
-      @post = Post.new
-      render json: { ok: true, result: @post }, status: :ok
+    def show
+      @post = Post.find(params[:id])
+      if @post
+        render json: { ok: true, result: @post }, status: :ok
+      else
+        render json: { ok: false, result: nil }, status: :not_found
+      end
     end
 
     def create
-      @post = Post.new(posts_params)
+      @post = Post.new(post_params)
       if @post.save
         render json: { ok: true, result: @post }, status: :ok
       else
@@ -21,7 +25,7 @@ module Api
 
     def update
       @post = Post.find(params[:id])
-      if @post.update(posts_params)
+      if @post.update(post_params)
         render json: { ok: true, result: @post }, status: :ok
       else
         render json: { ok: false, errors: @post.errors }, status: :not_acceptable
@@ -31,11 +35,11 @@ module Api
     def destroy
       @post = Post.find(params[:id])
       @post.destroy
-      render json: { ok: true }, status: :ok
+      render json: { ok: true }, status: :no_content
     end
 
-    def posts_params
-      params.require(:post).permit(:id, :title, :body, :email)
+    def post_params
+      params.require(:post).permit(:id, :title, :body, :username)
     end
   end
 end
