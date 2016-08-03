@@ -1,0 +1,20 @@
+language: ruby
+cache: bundler
+rvm:
+  - 2.3.1
+
+env:
+  - DB=postgresql
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cp config/database.travis.yml config/database.yml
+  - bundle exec rake db:migrate RAILS_ENV=test
+  - gem install brakeman
+
+script:
+  - ruby -rubygems spec/travis/brakeman.rb
+  - bundle exec rake
