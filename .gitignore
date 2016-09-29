@@ -17,7 +17,10 @@
 .idea/*
 config/database.yml
 config/application.yml
-config/provision/
+config/provision/keys
 keys
 public/uploads/
 .byebug_history
+
+# Ignore application configuration
+/config/application.yml
