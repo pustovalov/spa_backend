@@ -2,7 +2,7 @@
 # set :local_user, 'deployer'
 set :application, 'spa_backend'
 set :repo_url, 'https://github.com/pustovalov/spa_backend.git'
-set :branch, 'ansible'
+set :branch, 'master'
 set :deploy_to, '/home/ubuntu/applications/spa_backend'
 
 # set :stages, %w(staging production)

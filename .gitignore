@@ -18,6 +18,7 @@
 config/database.yml
 config/application.yml
 config/provision/keys
+config/provision/playbook.retry
 keys
 public/uploads/
 .byebug_history
