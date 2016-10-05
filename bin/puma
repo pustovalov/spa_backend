@@ -1,0 +1,125 @@
+#!/usr/bin/env puma
+
+environment ENV['RAILS_ENV'] || 'production'
+
+daemonize true
+
+pidfile "/var/www/myapp/shared/tmp/pids/puma.pid"
+stdout_redirect "/var/www/myapp/shared/tmp/log/stdout", "/var/www/myapp/shared/tmp/log/stderr"
+
+threads 0, 16
+
+bind "unix:///var/www/myapp/shared/tmp/sockets/puma.sock"
+Replace the path if necessary.
+
+Next, create a file at bin/puma.sh with the below content
+
+#! /bin/sh
+
+PUMA_CONFIG_FILE=/var/www/myapp/current/config/puma.rb
+PUMA_PID_FILE=/var/www/myapp/shared/tmp/pids/puma.pid
+PUMA_SOCKET=/var/www/myapp/shared/tmp/sockets/puma.sock
+
+# check if puma process is running
+puma_is_running() {
+  if [ -S $PUMA_SOCKET ] ; then
+    if [ -e $PUMA_PID_FILE ] ; then
+      if cat $PUMA_PID_FILE | xargs pgrep -P > /dev/null ; then
+        return 0
+      else
+        echo "No puma process found"
+      fi
+    else
+      echo "No puma pid file found"
+    fi
+  else
+    echo "No puma socket found"
+  fi
+
+  return 1
+}
+
+case "$1" in
+  start)
+    echo "Starting puma..."
+      rm -f $PUMA_SOCKET
+      if [ -e $PUMA_CONFIG_FILE ] ; then
+        bundle exec puma -C $PUMA_CONFIG_FILE
+      else
+        bundle exec puma
+      fi
+
+    echo "done"
+    ;;
+
+  stop)
+    echo "Stopping puma..."
+      kill -s SIGTERM `cat $PUMA_PID_FILE`
+      rm -f $PUMA_PID_FILE
+      rm -f $PUMA_SOCKET
+
+    echo "done"
+    ;;
+
+  restart)
+    if puma_is_running ; then
+      echo "Hot-restarting puma..."
+      kill -s SIGUSR2 `cat $PUMA_PID_FILE`
+
+      echo "Doublechecking the process restart..."
+      sleep 5
+      if puma_is_running ; then
+        echo "done"
+        exit 0
+      else
+        echo "Puma restart failed :/"
+      fi
+    fi
+
+    echo "Trying cold reboot"
+    bin/puma.sh start
+    ;;
+
+  *)
+    echo "Usage: script/puma.sh {start|stop|restart}" >&2
+    ;;
+esac
+Finally, update Mina deploy.rb to include a new step which will be in charge of restarting Puma after deploying
+
+desc "Deploys the current version to the server."
+task :deploy => :environment do
+  deploy do
+    # Put things that will set up an empty directory into a fully set-up
+    # instance of your project.
+    invoke :'git:clone'
+    invoke :'deploy:link_shared_paths'
+    invoke :'bundle:install'
+    invoke :'rails:db_migrate'
+    invoke :'rails:assets_precompile'
+    invoke :'deploy:cleanup'
+
+    to :launch do
+      invoke :'puma:restart'
+    end
+  end
+end
+
+namespace :puma do
+  desc "Start the application"
+  task :start do
+    queue 'echo "-----> Start Puma"'
+    queue "cd #{app_path} && RAILS_ENV=#{stage} && bin/puma.sh start", :pty => false
+  end
+
+  desc "Stop the application"
+  task :stop do
+    queue 'echo "-----> Stop Puma"'
+    queue "cd #{app_path} && RAILS_ENV=#{stage} && bin/puma.sh stop"
+  end
+
+  desc "Restart the application"
+  task :restart do
+    queue 'echo "-----> Restart Puma"'
+    queue "cd #{app_path} && RAILS_ENV=#{stage} && bin/puma.sh restart"
+  end
+end
