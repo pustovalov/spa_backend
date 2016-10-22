@@ -29,7 +29,7 @@ module SpaBackend
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'localhost:4000'
+        origins "#{ENV['ORIGINS']}"
         resource(
           '*',
           headers: :any,
