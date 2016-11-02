@@ -82,9 +82,9 @@ describe Api::PostsController do
   describe "DELETE #destroy" do
     let!(:post) { create(:post) }
 
-    it "returns 204 status code" do
+    it "returns 200 status code" do
       request
-      expect(response.status).to eq(204)
+      expect(response.status).to eq(200)
     end
 
     it "destroy post" do

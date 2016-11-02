@@ -35,7 +35,7 @@ module Api
     def destroy
       @post = Post.find(params[:id])
       @post.destroy
-      render json: { ok: true }, status: :no_content
+      render json: { ok: true }, status: :ok
     end
 
     def post_params
