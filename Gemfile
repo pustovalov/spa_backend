@@ -22,7 +22,13 @@ gem 'knock'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors', require: 'rack/cors'
-gem "figaro"
+gem 'figaro'
+gem 'kaminari'
+gem 'pg_search'
+gem 'fog-aws'
+gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
+gem 'carrierwave-base64'
+gem 'mini_magick'
 
 group :development, :test do
   gem 'binding_of_caller'

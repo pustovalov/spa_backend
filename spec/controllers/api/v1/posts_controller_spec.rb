@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Api::PostsController do
+describe Api::V1::PostsController do
   subject { JSON.parse(response.body).fetch("result") }
 
   describe "GET #index" do
@@ -42,6 +42,7 @@ describe Api::PostsController do
 
   describe "GET #show" do
     let!(:post) { create(:post) }
+
     before { request }
 
     it "returns 200 status code" do
@@ -53,8 +54,8 @@ describe Api::PostsController do
       expect(subject["title"]).to eq(post.title)
     end
 
-    def request()
-      get :show, id: post.id, as: :json
+    def request
+      get :show, params: { id: post.id }, as: :json
     end
   end
 
@@ -64,6 +65,7 @@ describe Api::PostsController do
     let(:post_params) do
       { post: { title: title } }
     end
+
     before { request }
 
     it "returns 200 status code" do
@@ -74,8 +76,8 @@ describe Api::PostsController do
       expect(subject["title"]).to eq(title)
     end
 
-    def request()
-      put :update, id: post.id, as: :json, post: { title: title }
+    def request
+      put :update, params: { id: post.id, post: { title: title } } , as: :json
     end
   end
 
@@ -91,8 +93,8 @@ describe Api::PostsController do
       expect { request }.to change(Post, :count).by(-1)
     end
 
-    def request()
-      delete :destroy, id: post.id, as: :json
+    def request
+      delete :destroy, params: { id: post.id }, as: :json
     end
   end
 end

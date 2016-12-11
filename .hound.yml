@@ -1,0 +1,8 @@
+ruby:
+  config_file: .ruby-style.yml
+haml:
+  config_file: .haml-style.yml
+css:
+  enabled: false
+scss:
+  enabled: false

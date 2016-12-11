@@ -1,6 +1,13 @@
+require 'api_constraints'
+
 Rails.application.routes.draw do
   post 'user_token' => 'user_token#create'
   namespace :api, path: '/api', defaults: { format: :json } do
-    resources :posts
+    scope module: :v1, constraints: ApiConstraints.new(version: 1) do
+      resources :posts
+    end
+    scope module: :v2, constraints: ApiConstraints.new(version: 2, default: true) do
+      resources :posts
+    end
   end
 end
