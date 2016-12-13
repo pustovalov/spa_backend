@@ -29,6 +29,11 @@ gem 'fog-aws'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'carrierwave-base64'
 gem 'mini_magick'
+gem 'bugsnag'
+
+group :production do
+  gem 'newrelic_rpm'
+end
 
 group :development, :test do
   gem 'binding_of_caller'
