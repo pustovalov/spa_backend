@@ -29,6 +29,8 @@ gem 'fog-aws'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'carrierwave-base64'
 gem 'mini_magick'
+gem 'http_accept_language'
+
 gem 'bugsnag'
 
 group :production do

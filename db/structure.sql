@@ -57,10 +57,7 @@ CREATE TABLE posts (
     username character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    image_file_name character varying,
-    image_content_type character varying,
-    image_file_size integer,
-    image_updated_at timestamp without time zone
+    image character varying
 );
 
 
@@ -103,7 +100,8 @@ CREATE TABLE users (
     password_digest character varying,
     admin boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    locale text DEFAULT 'en'::text NOT NULL
 );
 
 
@@ -173,11 +171,18 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160717220505'), ('20161112011429'), ('20161211175901');
+INSERT INTO schema_migrations (version) VALUES ('20160717220505'), ('20161112011429'), ('20161211204257'), ('20161214225717'), ('20161219002057');
 
 
