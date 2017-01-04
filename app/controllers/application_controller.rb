@@ -1,7 +1,16 @@
 class ApplicationController < ActionController::API
   include Knock::Authenticable
 
-  before_filter :set_locale
+  before_action :set_locale
+
+  def locale_name_pairs
+    I18n.available_locales.map do |locale|
+      {
+        value: locale.to_s,
+        label: I18n.t('language', locale: locale)
+      }
+    end
+  end
 
   def set_locale
     locale = if current_user
