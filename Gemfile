@@ -44,11 +44,12 @@ group :development, :test do
   gem 'capybara'
   gem 'poltergeist'
   gem 'factory_girl_rails'
-  gem 'byebug'
-  gem 'pry-byebug'
   gem 'parallel_tests'
   gem 'database_cleaner'
   gem 'faker'
+
+  gem 'pry-byebug'
+  gem 'awesome_print', require:'ap'
 end
 
 group :development do
