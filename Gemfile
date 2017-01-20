@@ -29,6 +29,8 @@ gem 'fog-aws'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'carrierwave-base64'
 gem 'mini_magick'
+gem 'http_accept_language'
+
 gem 'bugsnag'
 
 group :production do
@@ -42,11 +44,12 @@ group :development, :test do
   gem 'capybara'
   gem 'poltergeist'
   gem 'factory_girl_rails'
-  gem 'byebug'
-  gem 'pry-byebug'
   gem 'parallel_tests'
   gem 'database_cleaner'
   gem 'faker'
+
+  gem 'pry-byebug'
+  gem 'awesome_print', require:'ap'
 end
 
 group :development do

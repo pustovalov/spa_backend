@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :user do
-    email "MyString"
-    password_digest "MyString"
+    email { Faker::Internet.email }
+    name { Faker::Lorem.word }
+    password_digest { Faker::Lorem.word }
+    locale 'en'
   end
 end
