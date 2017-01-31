@@ -4,7 +4,7 @@ class UserTokenController < Knock::AuthTokenController
   def login
     user = User.find_by(email: auth_params[:email])
     if user
-      user_for_response
+      user_for_response(user)
     else
       render json: { ok: false, message: "User not found" }, status: :ok
     end
@@ -13,13 +13,13 @@ class UserTokenController < Knock::AuthTokenController
   def sign_up
     user = User.new(auth_params)
     if user.save
-      user_for_response
+      user_for_response(user)
     else
       render json: { ok: false, message: user.errors.full_messages }, status: :ok
     end
   end
 
-  def user_for_response
+  def user_for_response(user)
     render json:
             { ok: true,
               user: {
